@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin Panel | LinkNova</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#087fe8;--blue2:#0867ad;--sky:#eaf7ff;--line:#cfe9f8;--text:#102a43;--muted:#5d7285;--red:#e11d48}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,Arial,sans-serif;background:#f3f9ff;color:var(--text);line-height:1.5}
+[hidden]{display:none!important}
+.wrap{width:min(900px,94%);margin:auto;padding:20px 0 60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 8px 24px rgba(8,127,232,.07)}
+h1{font-size:22px}h2{font-size:18px;margin-bottom:12px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tab{padding:10px 16px;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer;color:var(--text)}
+.tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn{padding:10px 16px;border-radius:10px;border:0;background:var(--blue);color:#fff;font-weight:700;cursor:pointer;font-size:14px}
+.btn.gray{background:#e2e8f0;color:var(--text)}
+.btn.red{background:var(--red)}
+.btn.sm{padding:7px 11px;font-size:12px}
+label{display:block;font-size:12px;font-weight:700;margin:12px 0 5px}
+input,textarea,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
+textarea{min-height:90px;resize:vertical}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eef5fb}
+.row:last-child{border:0}
+.row .info{min-width:0;flex:1}
+.row .info b{display:block;font-size:14px}
+.row .info small{color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.thumb{width:54px;height:54px;border-radius:10px;object-fit:cover;background:var(--sky);flex:none}
+.msg{padding:10px 12px;border-radius:10px;font-size:13px;margin-top:10px}
+.msg.err{background:#ffe4e9;color:#9f1239}.msg.ok{background:#dcfce7;color:#166534}
+.modal{position:fixed;inset:0;background:#04101dbb;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow:auto;z-index:50}
+.modal .box{background:#fff;border-radius:16px;padding:20px;width:min(520px,100%);margin:auto}
+.login{max-width:400px;margin:12vh auto 0}
+.note{font-size:12px;color:var(--muted);margin-top:8px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="wrap login" id="loginView">
+  <div class="card">
+    <h1>Admin Login</h1>
+    <label>Email</label><input id="email" type="email" autocomplete="username">
+    <label>Password</label><input id="password" type="password" autocomplete="current-password">
+    <button class="btn" style="width:100%;margin-top:16px" id="loginBtn">Login</button>
+    <div id="loginMsg"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="wrap" id="dash" hidden>
+  <div class="top"><h1>LinkNova Admin</h1><div><a class="btn gray sm" href="index.html" target="_blank" style="text-decoration:none;display:inline-block">View Site</a> <button class="btn red sm" id="logoutBtn">Logout</button></div></div>
+  <div class="tabs" id="tabs"></div>
+  <div id="content"></div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal" id="modal" hidden><div class="box">
+  <h2 id="modalTitle"></h2>
+  <form id="modalForm"></form>
+</div></div>
+
+<script type="module">
+import { auth, db, DEFAULT_SETTINGS } from "./firebase-config.js";
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { collection, getDocs, addDoc, setDoc, updateDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- Fields ---------- */
+const SETTINGS_FIELDS = [
+  ["Site name","siteName"],["Logo image link","logoImage"],
+  ["Hero badge","heroBadge"],["Hero title","heroTitle"],["Hero subtitle","heroSubtitle"],["Hero text","heroText","textarea"],["Hero image link","heroImage"],
+  ["Hero card title","heroCardTitle"],["Hero card sub text","heroCardSub"],
+  ["Services heading","servicesTitle"],["Services text","servicesText","textarea"],
+  ["About heading","aboutTitle"],["About text","aboutText","textarea"],
+  ["Founder name","founderName"],["Founder role","founderRole"],["Founder image link","founderImage"],
+  ["Approach heading","approachTitle"],["Approach paragraph 1","approach1","textarea"],["Approach paragraph 2","approach2","textarea"],["Approach paragraph 3","approach3","textarea"],
+  ["Purchase heading","purchaseTitle"],["Purchase text","purchaseText","textarea"],
+  ["WhatsApp number (923XXXXXXXXX, no + or space)","whatsapp"],["Email","email"],["Location","location"],
+  ["Contact heading","contactTitle"],["Contact text","contactText","textarea"],["Contact tagline","contactTagline"],
+  ["LinkedIn link","linkedin"],["Facebook link","facebook"],["Instagram link","instagram"],["WhatsApp channel link","waChannel"],["Telegram link","telegram"],
+  ["Footer text","footerText"]
+];
+
+const SCHEMA = {
+  accounts: { label: "Accounts", item: "Account", title: a => a.description?.slice(0, 60) || "Account", sub: a => a.status || "Available", img: "image",
+    fields: [["Image link (ibb.co direct link)","image"],["Details (connections, age, location...)","description","textarea"],["Status","status","select",["Available","Sold"]],["Price (optional)","price"]] },
+  team: { label: "Team", item: "Member", title: t => t.name, sub: t => t.role, img: "image",
+    fields: [["Name","name"],["Role","role"],["Photo link","image"],["WhatsApp number (923XXXXXXXXX)","whatsapp"]] },
+  services: { label: "Services", item: "Service", title: s => s.title, sub: s => s.description,
+    fields: [["Icon (1-2 characters, e.g. in, ↗, ★)","icon"],["Title","title"],["Description","description","textarea"]] },
+  reviews: { label: "Reviews", item: "Review", title: r => r.name, sub: r => r.text,
+    fields: [["Client name","name"],["Review text","text","textarea"]] }
+};
+
+/* ---------- Seed data (current site content) ---------- */
+const SEED = {
+  services: [
+    ["in","LinkedIn Account Services","Account-related buying, selling and requirement assistance, subject to platform rules and applicable verification requirements."],
+    ["↗","LinkedIn Marketing","Professional LinkedIn marketing and profile-growth support for individuals and businesses."],
+    ["◎","Lead Generation","B2B lead-generation, data research and prospecting support for targeted business campaigns."],
+    ["✓","Account Recovery Assistance","Guidance for legitimate account recovery and verification processes using the platform's official procedures."],
+    ["★","Verification Assistance","Help preparing for eligible verification or badge application processes. Approval is always decided by the platform."],
+    ["+","Other Digital Services","Custom digital marketing, research and account-related assistance based on your project requirements."]
+  ].map(([icon,title,description]) => ({icon,title,description})),
+  team: [
+    { name:"Mohsin Ali", role:"Managing Director at LinkNova Solutions", image:"https://i.ibb.co/HDpdCr5r/IMG-20260906-WA0022.jpg", whatsapp:"923276825240" },
+    { name:"Irha Shahzad", role:"Manager at LinkNova Solutions", image:"https://i.ibb.co/QxHY46R/1000044554-1.jpg", whatsapp:"923287654172" }
+  ],
+  accounts: [
+    ["https://i.ibb.co/1fRq9TD8/Screenshot-20260911-183801-1.jpg","900+ Connections, 11 Years Old, Saudia Arabia Location, Verified account, Male Name."],
+    ["https://i.ibb.co/Z1VD6XLf/Screenshot-20260909-211517-1.jpg","100+ Connections, 12 Years Old, Verified account, Male Name, Malaysia Location."],
+    ["https://i.ibb.co/5Wb157jd/Screenshot-20260909-211741.jpg","900+ Connections, 8 Years Old, Verified account, Male Name, Brazil Location."],
+    ["https://i.ibb.co/fzZsH0xW/Screenshot-20260911-183640-1.jpg","500+ Connections, 16 Years Old, Male Name, Spain Location."],
+    ["https://i.ibb.co/dJsJTPCM/Screenshot-20260911-204334.jpg","500+ Connections, 7 Years Old, Male Name, Saudia Arabia Location."],
+    ["https://i.ibb.co/cSTpHFFd/Screenshot-20260911-205544.jpg","92 Connections, 15 Years Old, Female Name, USA Location."],
+    ["https://i.ibb.co/Fk85gw01/Screenshot-20260911-205811.jpg","150+ Connections, 10 Years Old, Verified account, Male Name, South Africa Location."],
+    ["https://i.ibb.co/QvkqPrWM/Screenshot-20260911-210157.jpg","700+ Connections, 13 Years Old, Male Name, Egypt Location."]
+  ].map(([image,description]) => ({image,description,status:"Available",price:""}))
+};
+
+/* ---------- Auth ---------- */
+$("loginBtn").onclick = async () => {
+  $("loginMsg").innerHTML = "";
+  try { await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value); }
+  catch (e) { $("loginMsg").innerHTML = `<div class="msg err">Login fail: email ya password ghalat hai.</div>`; }
+};
+$("password").addEventListener("keydown", e => { if (e.key === "Enter") $("loginBtn").click(); });
+$("logoutBtn").onclick = () => signOut(auth);
+onAuthStateChanged(auth, user => {
+  $("loginView").hidden = !!user;
+  $("dash").hidden = !user;
+  if (user) { buildTabs(); showTab("settings"); }
+});
+
+/* ---------- Tabs ---------- */
+let current = "settings";
+function buildTabs() {
+  const names = [["settings","Settings"], ...Object.entries(SCHEMA).map(([k,v]) => [k, v.label]), ["tools","Tools"]];
+  $("tabs").innerHTML = names.map(([k,l]) => `<button class="tab" data-k="${k}">${l}</button>`).join("");
+  $("tabs").querySelectorAll(".tab").forEach(b => b.onclick = () => showTab(b.dataset.k));
+}
+function showTab(k) {
+  current = k;
+  $("tabs").querySelectorAll(".tab").forEach(b => b.classList.toggle("on", b.dataset.k === k));
+  if (k === "settings") renderSettings();
+  else if (k === "tools") renderTools();
+  else renderList(k);
+}
+
+/* ---------- Field builder ---------- */
+function fieldHTML([label, key, type, opts], val) {
+  const v = val ?? "";
+  if (type === "textarea") return `<label>${esc(label)}</label><textarea name="${key}">${esc(v)}</textarea>`;
+  if (type === "select") return `<label>${esc(label)}</label><select name="${key}">${opts.map(o => `<option ${o === v ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>`;
+  return `<label>${esc(label)}</label><input name="${key}" value="${esc(v)}">`;
+}
+const formData = form => Object.fromEntries(new FormData(form).entries());
+
+/* ---------- Settings ---------- */
+async function renderSettings() {
+  $("content").innerHTML = `<div class="card">Loading...</div>`;
+  const snap = await getDoc(doc(db, "settings", "main"));
+  const S = { ...DEFAULT_SETTINGS, ...(snap.exists() ? snap.data() : {}) };
+  $("content").innerHTML = `<div class="card"><h2>Website Settings</h2><form id="sForm">${SETTINGS_FIELDS.map(f => fieldHTML(f, S[f[1]])).join("")}
+    <button class="btn" style="margin-top:16px">Save Settings</button><div id="sMsg"></div></form></div>`;
+  $("sForm").onsubmit = async e => {
+    e.preventDefault();
+    try { await setDoc(doc(db, "settings", "main"), formData(e.target), { merge: true }); $("sMsg").innerHTML = `<div class="msg ok">Saved ✓</div>`; }
+    catch (err) { $("sMsg").innerHTML = `<div class="msg err">Save fail: ${esc(err.message)}</div>`; }
+  };
+}
+
+/* ---------- Lists ---------- */
+async function load(name) {
+  const snap = await getDocs(collection(db, name));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+}
+async function renderList(name) {
+  const sc = SCHEMA[name];
+  $("content").innerHTML = `<div class="card">Loading...</div>`;
+  let items;
+  try { items = await load(name); } catch (e) { $("content").innerHTML = `<div class="card"><div class="msg err">${esc(e.message)}</div></div>`; return; }
+  $("content").innerHTML = `<div class="card"><div class="top"><h2 style="margin:0">${sc.label} (${items.length})</h2><button class="btn" id="addBtn">+ Add ${sc.item}</button></div>
+    ${items.length ? items.map((it, i) => `<div class="row">
+      ${sc.img && it[sc.img] ? `<img class="thumb" src="${esc(it[sc.img])}" alt="">` : ""}
+      <div class="info"><b>${esc(sc.title(it))}</b><small>${esc(sc.sub(it))}</small></div>
+      <div class="acts">
+        <button class="btn gray sm" data-a="up" data-i="${i}">▲</button><button class="btn gray sm" data-a="down" data-i="${i}">▼</button>
+        <button class="btn sm" data-a="edit" data-i="${i}">Edit</button><button class="btn red sm" data-a="del" data-i="${i}">Delete</button>
+      </div></div>`).join("") : `<p class="note">Abhi koi ${sc.item.toLowerCase()} nahi hai.</p>`}
+  </div>`;
+  $("addBtn").onclick = () => openModal(name, null, items);
+  $("content").querySelectorAll("[data-a]").forEach(b => b.onclick = async () => {
+    const i = +b.dataset.i, it = items[i], a = b.dataset.a;
+    try {
+      if (a === "edit") openModal(name, it, items);
+      if (a === "del" && confirm("Pakka delete karna hai?")) { await deleteDoc(doc(db, name, it.id)); renderList(name); }
+      if (a === "up" || a === "down") {
+        const j = a === "up" ? i - 1 : i + 1;
+        if (j < 0 || j >= items.length) return;
+        // order values ko re-number karke swap karo
+        const order = items.map(x => x.id);
+        [order[i], order[j]] = [order[j], order[i]];
+        await Promise.all(order.map((id, idx) => updateDoc(doc(db, name, id), { order: idx + 1 })));
+        renderList(name);
+      }
+    } catch (e) { alert("Error: " + e.message); }
+  });
+}
+
+function openModal(name, item, items) {
+  const sc = SCHEMA[name];
+  $("modalTitle").textContent = (item ? "Edit " : "Add ") + sc.item;
+  $("modalForm").innerHTML = sc.fields.map(f => fieldHTML(f, item?.[f[1]])).join("") +
+    `<div style="display:flex;gap:8px;margin-top:18px"><button class="btn">Save</button><button type="button" class="btn gray" id="cancelBtn">Cancel</button></div><div id="mMsg"></div>`;
+  $("modal").hidden = false;
+  $("cancelBtn").onclick = () => $("modal").hidden = true;
+  $("modalForm").onsubmit = async e => {
+    e.preventDefault();
+    const data = formData(e.target);
+    try {
+      if (item) await updateDoc(doc(db, name, item.id), data);
+      else await addDoc(collection(db, name), { ...data, order: (items.length ? Math.max(...items.map(x => x.order ?? 0)) : 0) + 1 });
+      $("modal").hidden = true;
+      renderList(name);
+    } catch (err) { $("mMsg").innerHTML = `<div class="msg err">${esc(err.message)}</div>`; }
+  };
+}
+
+/* ---------- Tools ---------- */
+function renderTools() {
+  $("content").innerHTML = `<div class="card"><h2>Import current website data</h2>
+    <p class="note" style="margin:0 0 12px">Pehli dafa ye button dabao. Ye purani website ke settings, services, team aur 8 accounts Firestore mein daal dega. Jo section pehle se bhara ho usay skip kar dega. Reviews import nahi hote, wo aap asli clients ke khud add karo.</p>
+    <button class="btn" id="seedBtn">Import Now</button><div id="seedMsg"></div></div>`;
+  $("seedBtn").onclick = async () => {
+    if (!confirm("Import start karun?")) return;
+    const log = [];
+    try {
+      const s = await getDoc(doc(db, "settings", "main"));
+      if (!s.exists()) { await setDoc(doc(db, "settings", "main"), DEFAULT_SETTINGS); log.push("settings ✓"); } else log.push("settings skip");
+      for (const [name, arr] of Object.entries(SEED)) {
+        const existing = await getDocs(collection(db, name));
+        if (existing.empty) { let o = 1; for (const x of arr) await addDoc(collection(db, name), { ...x, order: o++ }); log.push(`${name} ✓ (${arr.length})`); }
+        else log.push(`${name} skip`);
+      }
+      $("seedMsg").innerHTML = `<div class="msg ok">${log.join(" • ")}</div>`;
+    } catch (e) { $("seedMsg").innerHTML = `<div class="msg err">${esc(e.message)}<br>Pehle Firestore Rules publish karo aur login check karo.</div>`; }
+  };
+}
+</script>
+</body>
+</html>

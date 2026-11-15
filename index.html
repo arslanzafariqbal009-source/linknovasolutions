@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="LinkNova Solutions — Digital Marketing and LinkedIn Marketing services.">
+<title>LinkedIn Marketing | LinkNova Solutions</title>
+<link rel="icon" href="https://i.ibb.co/VpNC3FsX/file-000000007ca881fd8bad4ff7f25bc794.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{--blue:#087fe8;--blue2:#0867ad;--cyan:#00a8ff;--sky:#eaf7ff;--black:#07111f;--text:#102a43;--muted:#5d7285;--line:#cfe9f8;--soft:#f5fbff;--shadow:0 18px 55px rgba(16,72,130,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,Arial,sans-serif;color:var(--text);line-height:1.6;background:radial-gradient(circle at 10% 10%,#e8f8ff 0,transparent 28%),radial-gradient(circle at 90% 30%,#eaf5ff 0,transparent 30%),linear-gradient(180deg,#fff,#f5fbff,#fff)}
+a{text-decoration:none;color:inherit}
+button{font:inherit}
+.container{width:min(1160px,92%);margin:auto}
+[hidden]{display:none!important}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);box-shadow:0 8px 28px rgba(8,127,232,.08)}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.logo{display:flex;align-items:center;gap:11px;font-weight:800;font-size:19px;color:var(--black);text-transform:uppercase}
+.logo img{width:46px;height:46px;border-radius:13px;object-fit:cover;border:2px solid var(--blue)}
+.menu{width:45px;height:45px;border:1px solid var(--line);background:#fff;border-radius:12px;display:grid;place-items:center;cursor:pointer}
+.menu span,.menu span:before,.menu span:after{content:"";display:block;width:21px;height:2px;background:var(--black);position:relative}
+.menu span:before{position:absolute;top:-7px}.menu span:after{position:absolute;top:7px}
+.dropdown{position:absolute;right:0;top:56px;width:220px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px;box-shadow:var(--shadow);display:none}
+.dropdown.show{display:block}
+.dropdown a{display:block;padding:12px 14px;border-radius:10px;font-weight:600}
+.dropdown a:hover{background:var(--sky);color:var(--blue)}
+
+/* HERO */
+.hero{padding:95px 0 80px;background:radial-gradient(circle at 85% 15%,rgba(0,168,255,.18),transparent 25%),linear-gradient(135deg,#fff,#f1faff,#e4f5ff);position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:50px}
+.badge{display:inline-flex;align-items:center;gap:8px;background:#e7f2ff;color:var(--blue2);border:1px solid #cbe2ff;padding:8px 13px;border-radius:999px;font-size:12px;font-weight:800;margin-bottom:18px}
+.hero h1{font-size:clamp(42px,7vw,72px);line-height:1.02;letter-spacing:-3px;color:var(--black);margin-bottom:18px}
+.hero h2{font-size:clamp(18px,2.5vw,27px);line-height:1.35;margin-bottom:15px}
+.hero p{color:var(--muted);max-width:680px;font-size:16px}
+.ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 19px;border-radius:12px;font-weight:800;border:1px solid var(--line);transition:.2s;cursor:pointer}
+.btn:hover{transform:translateY(-2px)}
+.btn.primary{background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;border-color:var(--blue);box-shadow:0 12px 28px rgba(8,127,232,.2)}
+.btn.secondary{background:#fff;color:var(--black)}
+.hero-card{background:#fff;border:1px solid var(--line);border-radius:28px;padding:18px;box-shadow:var(--shadow)}
+.hero-card img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:20px}
+.hero-card .mini{display:flex;justify-content:space-between;gap:12px;padding:16px 5px 2px}
+.mini small{color:var(--muted)}
+
+/* SECTIONS */
+section{padding:82px 0}
+.section-head{text-align:center;max-width:760px;margin:0 auto 38px;padding:0 4%}
+.eyebrow{color:var(--blue);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.4px}
+.section-head h2{font-size:clamp(30px,5vw,46px);line-height:1.1;color:var(--black);margin:8px 0 12px}
+.section-head p{color:var(--muted)}
+.card-hover{transition:.25s ease}
+.card-hover:hover{transform:translateY(-7px);box-shadow:0 22px 48px rgba(8,127,232,.15)!important;border-color:#9bd9fa!important}
+.service-grid,.review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.service,.review{padding:25px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 30px rgba(12,61,110,.05)}
+.icon{width:46px;height:46px;border-radius:13px;background:var(--sky);color:var(--blue);display:grid;place-items:center;font-size:21px;margin-bottom:16px;font-weight:800}
+.service h3{font-size:17px;margin-bottom:7px}.service p{font-size:13px;color:var(--muted)}
+.reviews{background:var(--soft)}
+.stars{color:var(--blue);letter-spacing:2px;margin-bottom:12px}
+.review p{font-size:14px;margin-bottom:18px}
+.review-user{display:flex;align-items:center;gap:10px}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--sky);display:grid;place-items:center;font-weight:800;color:var(--blue)}
+.review small{color:var(--muted)}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:30px}
+.profile-card{background:linear-gradient(145deg,#07111f,#12365f);color:#fff;border-radius:25px;padding:25px}
+.profile-card img{width:150px;height:150px;border-radius:25px;object-fit:cover;border:4px solid #fff;margin-bottom:20px}
+.profile-card h3{font-size:25px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.3)}
+.profile-card p{color:#c8d9ec;font-size:14px;margin-top:6px}
+.profile-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.profile-links a{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#ffffff14;border:1px solid #ffffff25}
+.about-copy{border:1px solid var(--line);border-radius:25px;padding:28px;background:var(--soft)}
+.about-copy h3{font-size:25px;margin-bottom:10px}.about-copy p{color:var(--muted);margin-bottom:15px}
+
+/* TEAM */
+.employees-modern{background:linear-gradient(180deg,#fff,#f3fbff)}
+.team-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;max-width:900px;margin:auto;padding:0 4%}
+.team-card{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:26px;overflow:hidden;box-shadow:0 14px 38px rgba(8,127,232,.1)}
+.team-photo{height:320px;padding:10px;background:linear-gradient(135deg,#e5f7ff,#fff)}
+.team-photo img{width:100%;height:100%;object-fit:cover;border-radius:19px}
+.team-info{position:relative;padding:22px 78px 24px 24px}
+.team-badge{display:inline-block;font-size:10px;font-weight:900;letter-spacing:1px;color:var(--blue2);background:var(--sky);padding:6px 9px;border-radius:999px;margin-bottom:10px}
+.team-info h3{font-size:24px;margin-bottom:5px}.team-info p{color:var(--muted);font-size:13px}
+.team-wa{position:absolute;right:22px;top:25px;width:48px;height:48px;border-radius:15px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#16cf6b,#079447);font-size:22px;box-shadow:0 10px 22px rgba(19,201,103,.24)}
+
+/* PURCHASE */
+.purchase{background:var(--soft)}
+.purchase-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;width:min(1160px,92%);margin:auto}
+.account-card{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 10px 28px rgba(15,23,42,.08);display:flex;flex-direction:column}
+.account-image-slot{height:210px;background:linear-gradient(135deg,#eaf4ff,#cfe5ff);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.account-image-slot img{width:100%;height:100%;object-fit:cover}
+.image-placeholder{font-weight:800;color:#47709a;letter-spacing:.08em;font-size:.8rem;text-align:center;padding:20px}
+.sold-ribbon{position:absolute;top:12px;left:12px;background:#e11d48;color:#fff;font-size:11px;font-weight:800;padding:5px 10px;border-radius:999px}
+.account-body{padding:18px;display:flex;flex-direction:column;flex:1}
+.account-body h3{font-size:20px;margin-bottom:8px}
+.account-body p{color:var(--muted);font-size:14px;margin-bottom:14px}
+.price{color:var(--blue);font-weight:800;font-size:20px;margin-bottom:10px}
+.tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.tags span{font-size:11px;font-weight:700;padding:6px 9px;border-radius:999px;background:var(--sky);color:var(--blue2)}
+.add-cart-btn{display:block;text-align:center;background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;padding:11px 14px;border-radius:11px;font-weight:800;margin-top:auto}
+.add-cart-btn.off{background:#94a3b8;pointer-events:none}
+.purchase-cta{text-align:center;margin-top:32px}
+.big-whatsapp-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;padding:18px 32px;border-radius:16px;font-weight:900;font-size:17px;border:2px solid #78c8f5;box-shadow:0 14px 34px rgba(22,135,217,.22)}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:20px}
+.contact-info,.form{border:1px solid var(--line);border-radius:22px;padding:27px}
+.contact-info{background:linear-gradient(145deg,#0a1d34,#1262bb);color:#fff}
+.contact-info p{color:#c9dbef;margin:10px 0 22px}
+.contact-item{padding:13px 0;border-bottom:1px solid #ffffff20;font-size:13px}
+.contact-item b{display:block}.contact-item span{color:#c9dbef;word-break:break-all}
+.form{background:var(--soft)}
+.field{margin-bottom:14px}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:6px}
+input,textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:11px;padding:12px 13px;outline:none;font-family:inherit}
+input:focus,textarea:focus{border-color:var(--blue)}
+textarea{min-height:130px;resize:vertical}
+
+footer{background:#eef9ff;border-top:1px solid var(--line);padding:30px 0;text-align:center;font-size:13px;color:var(--muted)}
+.float-wa{position:fixed;right:18px;bottom:18px;z-index:999;background:linear-gradient(135deg,#16cf6b,#079447);color:#fff;border-radius:50%;width:58px;height:58px;display:grid;place-items:center;box-shadow:0 12px 30px rgba(0,0,0,.2);font-size:25px;border:3px solid #fff}
+
+@media(max-width:1050px){.purchase-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr}.service-grid,.review-grid{grid-template-columns:repeat(2,1fr)}.hero{padding-top:65px}}
+@media(max-width:620px){
+ .nav{height:68px}.logo{font-size:15px}.logo img{width:40px;height:40px}
+ section{padding:62px 0}
+ .service-grid,.review-grid,.purchase-grid,.team-grid{grid-template-columns:1fr}
+ .hero h1{letter-spacing:-2px}.hero-card{max-width:430px;margin:auto}
+ .team-photo{height:280px}.account-image-slot{height:230px}
+ .big-whatsapp-btn{width:100%;justify-content:center;font-size:15px;padding:16px 18px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav">
+    <a class="logo" href="#home"><img id="logoImg" alt="Logo"><span id="siteName">LinkNova Solutions</span></a>
+    <div style="position:relative">
+      <button class="menu" aria-label="Open menu" id="menuBtn"><span></span></button>
+      <div class="dropdown" id="dropdown">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#purchase">Purchase</a>
+        <a href="#contact">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main id="home">
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="badge">● <span id="heroBadge"></span></div>
+      <h1 id="heroTitle"></h1>
+      <h2 id="heroSubtitle"></h2>
+      <p id="heroText"></p>
+      <div class="ctas">
+        <a class="btn primary" href="#purchase">View Available Accounts →</a>
+        <a class="btn secondary" href="#contact">Contact Us</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <img id="heroImg" alt="Hero">
+      <div class="mini"><div><b id="heroCardTitle"></b><br><small id="heroCardSub"></small></div><div><b>All accounts</b><br><small>Available For Sale</small></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head"><div class="eyebrow">Our Services</div><h2 id="servicesTitle"></h2><p id="servicesText"></p></div>
+    <div class="service-grid" id="servicesGrid"></div>
+  </div>
+</section>
+
+<section class="reviews" id="reviewsSection" hidden>
+  <div class="container">
+    <div class="section-head"><div class="eyebrow">Client Feedback</div><h2>What Clients Say</h2></div>
+    <div class="review-grid" id="reviewsGrid"></div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="container">
+    <div class="section-head"><div class="eyebrow">About Us</div><h2 id="aboutTitle"></h2><p id="aboutText"></p></div>
+    <div class="about-grid">
+      <div class="profile-card">
+        <img id="founderImg" alt="Founder">
+        <h3 id="founderName"></h3>
+        <p id="founderRole"></p>
+        <div class="profile-links" id="socialLinks"></div>
+      </div>
+      <div class="about-copy">
+        <h3 id="approachTitle"></h3>
+        <p id="approach1"></p><p id="approach2"></p><p id="approach3"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="employees" class="employees-modern">
+  <div class="section-head"><span class="eyebrow">OUR TEAM</span><h2>Our Employees</h2><p>Meet the people behind <span class="brand"></span>.</p></div>
+  <div class="team-grid" id="teamGrid"></div>
+</section>
+
+<section id="purchase" class="purchase">
+  <div class="section-head"><span class="eyebrow">PURCHASE</span><h2 id="purchaseTitle"></h2><p id="purchaseText"></p></div>
+  <div class="purchase-grid" id="accountsGrid"></div>
+  <div class="purchase-cta">
+    <a class="big-whatsapp-btn" id="bigWa" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp Us</a>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="section-head"><div class="eyebrow">Contact Us</div><h2 id="contactTitle"></h2><p id="contactText"></p></div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3 class="brand"></h3>
+        <p id="contactTagline"></p>
+        <div class="contact-item"><b>Founder & CEO</b><span id="ciFounder"></span></div>
+        <div class="contact-item"><b>WhatsApp</b><span id="ciWa"></span></div>
+        <div class="contact-item"><b>Email</b><span id="ciEmail"></span></div>
+        <div class="contact-item"><b>Location</b><span id="ciLoc"></span></div>
+      </div>
+      <form class="form" id="contactForm">
+        <div class="field"><label>Your Name</label><input id="name" required placeholder="Enter your name"></div>
+        <div class="field"><label>Your Comment / Requirement</label><textarea id="comment" required placeholder="I need a LinkedIn account..."></textarea></div>
+        <button class="btn primary" style="width:100%;border:0">Submit Request</button>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="container" id="footerText"></div></footer>
+<a class="float-wa" id="floatWa" target="_blank" rel="noopener" aria-label="Contact WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+
+<script type="module">
+import { db, DEFAULT_SETTINGS } from "./firebase-config.js";
+import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const setText = (id, v) => { const el = $(id); if (el) el.textContent = v ?? ""; };
+
+// menu
+$("menuBtn").onclick = () => $("dropdown").classList.toggle("show");
+document.addEventListener("click", e => { if (!e.target.closest(".menu") && !e.target.closest(".dropdown")) $("dropdown").classList.remove("show"); });
+$("dropdown").querySelectorAll("a").forEach(a => a.onclick = () => $("dropdown").classList.remove("show"));
+
+async function getList(name) {
+  const snap = await getDocs(collection(db, name));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+}
+
+let S = { ...DEFAULT_SETTINGS };
+try {
+  const s = await getDoc(doc(db, "settings", "main"));
+  if (s.exists()) S = { ...DEFAULT_SETTINGS, ...s.data() };
+} catch (e) { console.warn("Settings load failed", e); }
+
+const waLink = (msg) => `https://wa.me/${S.whatsapp}` + (msg ? `?text=${encodeURIComponent(msg)}` : "");
+
+// settings -> page
+document.title = `LinkedIn Marketing | ${S.siteName}`;
+$("logoImg").src = S.logoImage;
+["siteName","heroBadge","heroTitle","heroSubtitle","heroText","heroCardTitle","heroCardSub","servicesTitle","servicesText",
+ "aboutTitle","aboutText","founderName","founderRole","approachTitle","approach1","approach2","approach3",
+ "purchaseTitle","purchaseText","contactTitle","contactText","contactTagline","footerText"].forEach(k => setText(k, S[k]));
+$("heroImg").src = S.heroImage;
+$("founderImg").src = S.founderImage;
+document.querySelectorAll(".brand").forEach(el => el.textContent = S.siteName);
+setText("ciFounder", S.founderName); setText("ciWa", `+${S.whatsapp}`); setText("ciEmail", S.email); setText("ciLoc", S.location);
+$("bigWa").href = waLink("Hello " + S.siteName + ", I want to purchase an account.");
+$("bigWa").innerHTML = `<i class="fa-brands fa-whatsapp"></i> WhatsApp Us • +${esc(S.whatsapp)}`;
+$("floatWa").href = waLink();
+
+const socials = [["linkedin","fa-linkedin-in"],["facebook","fa-facebook-f"],["instagram","fa-instagram"],["waChannel","fa-whatsapp"],["telegram","fa-telegram"]];
+$("socialLinks").innerHTML = socials.filter(([k]) => S[k]).map(([k, ic]) =>
+  `<a href="${esc(S[k])}" target="_blank" rel="noopener"><i class="fa-brands ${ic}"></i></a>`).join("");
+
+// contact form
+$("contactForm").onsubmit = e => {
+  e.preventDefault();
+  const msg = `Hello, I am ${$("name").value.trim()}. Requirement: ${$("comment").value.trim()}`;
+  window.open(waLink(msg), "_blank");
+};
+
+// lists
+try {
+  const [services, reviews, team, accounts] = await Promise.all(["services","reviews","team","accounts"].map(getList));
+
+  $("servicesGrid").innerHTML = services.map(s =>
+    `<article class="service card-hover"><div class="icon">${esc(s.icon || "★")}</div><h3>${esc(s.title)}</h3><p>${esc(s.description)}</p></article>`).join("");
+
+  if (reviews.length) {
+    $("reviewsSection").hidden = false;
+    $("reviewsGrid").innerHTML = reviews.map(r =>
+      `<article class="review card-hover"><div class="stars">★★★★★</div><p>“${esc(r.text)}”</p><div class="review-user"><div class="avatar">${esc((r.name||"?")[0])}</div><div><b>${esc(r.name)}</b></div></div></article>`).join("");
+  }
+
+  $("teamGrid").innerHTML = team.map(t =>
+    `<article class="team-card card-hover"><div class="team-photo"><img src="${esc(t.image)}" alt="${esc(t.name)}" loading="lazy"></div>
+     <div class="team-info"><span class="team-badge">${esc(t.name)}</span><h3>${esc(t.name)}</h3><p>${esc(t.role)}</p>
+     ${t.whatsapp ? `<a class="team-wa" href="https://wa.me/${esc(String(t.whatsapp).replace(/\D/g,""))}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>` : ""}</div></article>`).join("");
+
+  $("accountsGrid").innerHTML = accounts.map((a, i) => {
+    const n = String(i + 1).padStart(2, "0");
+    const sold = a.status === "Sold";
+    const msg = `Hello ${S.siteName}, I want to purchase Account #${n}.`;
+    return `<article class="account-card card-hover">
+      <div class="account-image-slot">${a.image ? `<img src="${esc(a.image)}" alt="Account #${n}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=image-placeholder>IMAGE NOT FOUND</div>'">` : `<div class="image-placeholder">NO IMAGE</div>`}${sold ? `<div class="sold-ribbon">SOLD</div>` : ""}</div>
+      <div class="account-body"><h3>Account For Sale</h3>
+      ${a.price ? `<div class="price">${esc(a.price)}</div>` : ""}
+      <p>${esc(a.description)}</p>
+      <div class="tags"><span>${sold ? "Sold" : "Available"}</span><span>Details on WhatsApp</span></div>
+      <a class="add-cart-btn ${sold ? "off" : ""}" href="${sold ? "#" : waLink(msg)}" target="_blank" rel="noopener">${sold ? "SOLD OUT" : "BUY"}</a></div></article>`;
+  }).join("");
+} catch (e) {
+  console.error("Data load failed", e);
+}
+</script>
+</body>
+</html>
